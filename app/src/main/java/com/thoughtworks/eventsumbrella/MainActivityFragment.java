@@ -5,20 +5,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.ButterKnife;
+
 
 public class MainActivityFragment extends Fragment {
-    // EventAdapter eventAdapter;
-    List<String> eventUpdate;
-    ArrayAdapter<String> eventAdapter;
+    EventAdapter eventAdapter;
+    List<String> eventName;
+    List<String> eventAuthor;
+    List<String> eventDate;
 
     public MainActivityFragment() {
-        // Required empty public constructor
     }
 
     @Override
@@ -30,18 +31,14 @@ public class MainActivityFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main_activity, container, false);
+        ButterKnife.inject(this, rootView);
 
+        eventName = new ArrayList<String>(new ArrayList<String>());
+        eventAuthor = new ArrayList<String>(new ArrayList<String>());
+        eventDate = new ArrayList<String>(new ArrayList<String>());
+        eventAdapter = new EventAdapter(getContext(), (ArrayList<String>) eventName, (ArrayList<String>) eventAuthor, (ArrayList<String>) eventDate);
 
-        eventUpdate = new ArrayList<String>(new ArrayList<String>());
         ListView listView = (ListView) rootView.findViewById(R.id.textView);
-
-
-        eventAdapter =
-                new ArrayAdapter<String>(
-                        getActivity(),
-                        R.layout.list_item_events,
-                        R.id.list_item_textview,
-                        eventUpdate);
         listView.setAdapter(eventAdapter);
         FetchEvents fetchEvents = new FetchEvents(this);
         fetchEvents.execute();
